@@ -1,0 +1,24 @@
+{
+	"name": "ruax",
+	"version": "1.0.0",
+	"description": "一个轻量级的Javascript异步数据请求库",
+	"main": "src/index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"serve": "webpack --mode development",
+		"build": "webpack --mode production"
+	},
+	"author": "lingkai",
+	"license": "MIT",
+	"dependencies": {
+		"babel-core": "^6.26.3",
+		"babel-loader": "^7.1.5",
+		"babel-preset-env": "^1.7.0"
+	},
+	"babel": {
+		"presets": [
+			"env"
+		],
+		"plugins": []
+	}
+}
