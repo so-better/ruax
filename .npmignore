@@ -1,7 +1,9 @@
 # 忽略目录
 node_modules/
 test/
-test-node/
+src/
 
 # 忽略指定文件
 webpack.config.js
+package.json
+package-lock.json
