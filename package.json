@@ -1,6 +1,6 @@
 {
 	"name": "ruax",
-	"version": "1.3.6",
+	"version": "1.3.7",
 	"description": "一个轻量级的Javascript异步数据请求库",
 	"main": "dist/ruax.js",
 	"private": false,
