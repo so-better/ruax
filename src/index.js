@@ -307,7 +307,9 @@ class Ruax {
 						xhr.setRequestHeader(item, config.headers[item]);
 					}
 					if (config.headers['Content-Type'] == 'application/x-www-form-urlencoded' && !(config.data instanceof FormData)) {
-						config.data = this._getParams(config.data); //转换json数据
+						config.data = this._getParams(config.data); //转换成&拼接
+					}else if(config.headers['Content-Type'] == 'application/json' && !(config.data instanceof FormData)){
+						config.data = JSON.stringify(config.data);//转换成json字符串
 					}
 					xhr.send(config.data);
 				}
