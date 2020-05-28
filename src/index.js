@@ -49,6 +49,10 @@ class Ruax {
 		if (typeof(config.jsonpCallback) != 'string') {
 			config.jsonpCallback = this.defaults.jsonpCallback;
 		}
+		//contentType设置
+		if (typeof(config.contentType) != 'boolean'){
+			config.contentType = this.defaults.contentType;
+		}
 		//headers请求头配置
 		if (typeof(config.headers) != "object") {
 			config.headers = this.defaults.headers;
@@ -128,6 +132,10 @@ class Ruax {
 		//jsonpCallback跨域回调方法名称
 		if (typeof(this.defaults.jsonpCallback) != 'string') {
 			this.defaults.jsonpCallback = 'callback';
+		}
+		//contentType设置
+		if (typeof(this.defaults.contentType) != 'boolean'){
+			this.defaults.contentType = true;
 		}
 		//headers请求头配置
 		if (typeof(this.defaults.headers) != "object") {
@@ -304,7 +312,13 @@ class Ruax {
 
 					//添加配置的请求头
 					for (var item in config.headers) {
-						xhr.setRequestHeader(item, config.headers[item]);
+						if(item == 'Content-Type'){
+							if(config.contentType){
+								xhr.setRequestHeader(item, config.headers[item]);
+							}
+						}else{
+							xhr.setRequestHeader(item, config.headers[item]);
+						}
 					}
 					if (config.headers['Content-Type'] == 'application/x-www-form-urlencoded' && !(config.data instanceof FormData)) {
 						config.data = this._getParams(config.data); //转换成&拼接
