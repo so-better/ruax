@@ -58,6 +58,14 @@ class Ruax {
 			Object.assign(config.headers, this.defaults.headers);
 			Object.assign(config.headers, obj);
 		}
+		//contentType配置
+		if (typeof(config.contentType) != 'string' && config.contentType !== false){
+			config.contentType = this.defaults.contentType;
+		}
+		//processData配置
+		if (typeof(config.processData) != 'boolean'){
+			config.processData = this.defaults.processData;
+		}
 		//cache缓存配置
 		if (typeof(config.cache) != 'boolean') {
 			config.cache = this.defaults.cache;
@@ -82,9 +90,11 @@ class Ruax {
 		if (typeof(config.cancelRequest) != "function") {
 			config.cancelRequest = this.defaults.cancelRequest;
 		}
+		//请求发送之前对数据进行处理
 		if (typeof(config.beforeRequest) != "function") {
 			config.beforeRequest = this.defaults.beforeRequest;
 		}
+		//请求响应前对响应结果进行处理
 		if (typeof(config.beforeResponse) != "function") {
 			config.beforeResponse = this.defaults.beforeResponse;
 		}
@@ -131,15 +141,15 @@ class Ruax {
 		}
 		//headers请求头配置
 		if (typeof(this.defaults.headers) != "object") {
-			this.defaults.headers = {
-				'Content-Type': 'application/x-www-form-urlencoded'
-			}
-		} else {
-			var obj = {
-				'Content-Type': 'application/x-www-form-urlencoded'
-			}
-			Object.assign(obj, this.defaults.headers);
-			this.defaults.headers = obj;
+			this.defaults.headers = {}
+		}
+		//ContentType配置
+		if (typeof(this.defaults.contentType) != 'string' && this.defaults.contentType !== false){
+			this.defaults.contentType = 'application/x-www-form-urlencoded';
+		}
+		//processData配置
+		if (typeof(this.defaults.processData) != 'boolean'){
+			this.defaults.processData = true;
 		}
 		//cache缓存配置
 		if (typeof(this.defaults.cache) != 'boolean') {
@@ -295,6 +305,10 @@ class Ruax {
 					for (var item in config.headers) {
 						xhr.setRequestHeader(item, config.headers[item]);
 					}
+					//添加ContentType
+					if(typeof(config.contentType) == 'string'){
+						xhr.setRequestHeader('Content-Type',config.contentType)
+					}
 					xhr.send(null)
 				} else if (config.type.toLowerCase() == 'post') {
 					xhr.open('POST', config.baseUrl + config.url, config.async);
@@ -306,10 +320,12 @@ class Ruax {
 					for (var item in config.headers) {
 						xhr.setRequestHeader(item, config.headers[item]);
 					}
-					if (config.headers['Content-Type'] == 'application/x-www-form-urlencoded' && !(config.data instanceof FormData)) {
+					//添加ContentType
+					if(typeof(config.contentType) == 'string'){
+						xhr.setRequestHeader('Content-Type',config.contentType)
+					}
+					if(config.processData){
 						config.data = this._getParams(config.data); //转换成序列化参数
-					}else if(config.headers['Content-Type'] == 'application/json' && !(config.data instanceof FormData)){
-						config.data = JSON.stringify(config.data);//转换成json字符串
 					}
 					xhr.send(config.data);
 				}
