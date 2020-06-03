@@ -1,1 +1,1 @@
-## Ruax使用方法待写
+##### 使用方法请查看我的个人博客[https://www.mvi-web.cn/library/detail?id=7](https://www.mvi-web.cn/library/detail?id=7)
