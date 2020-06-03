@@ -240,10 +240,12 @@ class Ruax {
 						} else {
 							res = xhr.responseText;
 						}
-						this.beforeResponse(res);
-						config.beforeResponse(res);
+						this.beforeResponse(xhr,res);
+						config.beforeResponse(xhr,res);
 						resolve(res);
 					} else {
+						this.beforeResponse(xhr);
+						this.beforeResponse(xhr);
 						reject(xhr);
 					}
 				} else if (xhr.readyState == 1) { //请求发送之前
