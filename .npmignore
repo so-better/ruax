@@ -1,6 +1,3 @@
 # 忽略目录
 node_modules/
 test/
-
-# 忽略指定文件
-webpack.config.js
