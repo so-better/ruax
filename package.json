@@ -11,15 +11,16 @@
 	},
 	"author": "lingkai",
 	"license": "MIT",
-	"dependencies": {
-		"babel-core": "^6.26.3",
-		"babel-loader": "^7.1.5",
-		"babel-preset-env": "^1.7.0"
-	},
+	"dependencies": {},
 	"babel": {
 		"presets": [
 			"env"
 		],
 		"plugins": []
+	},
+	"devDependencies": {
+		"babel-core": "^6.26.3",
+		"babel-loader": "^7.1.5",
+		"babel-preset-env": "^1.7.0"
 	}
 }
