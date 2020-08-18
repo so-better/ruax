@@ -245,7 +245,7 @@ class Ruax {
 						resolve(res);
 					} else {
 						this.beforeResponse(xhr);
-						this.beforeResponse(xhr);
+						config.beforeResponse(xhr);
 						reject(xhr);
 					}
 				} else if (xhr.readyState == 1) { //请求发送之前
@@ -289,7 +289,7 @@ class Ruax {
 				oS.timer = setTimeout(() => {
 					window[callbackName] = null;
 					oHead.removeChild(oS);
-					reject('连接超时');
+					reject(new Error('请求超时'));
 				}, config.timeout);
 			} else {
 				if (config.type.toLowerCase() == 'get') {
