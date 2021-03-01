@@ -219,7 +219,7 @@ class Ruax {
 				xhr.responseType = "blob";
 			}
 			//给请求添加状态变化事件处理函数
-			xhr.onreadystatechange = (e) => {
+			xhr.onreadystatechange = e => {
 				if (xhr.readyState == 4) {
 					config.complete(xhr);
 					if (xhr.status == 200) {
@@ -227,9 +227,9 @@ class Ruax {
 						if (config.dataType.toLowerCase() == "json") {
 							try {
 								res = JSON.parse(xhr.responseText);
-							} catch (e) {
+							} catch (error) {
 								//json解析失败
-								reject(xhr);
+								reject(error);
 							}
 						} else if (config.dataType.toLowerCase() == "xml") {
 							res = xhr.responseXML;
@@ -243,10 +243,10 @@ class Ruax {
 						this.beforeResponse(xhr,res);
 						config.beforeResponse(xhr,res);
 						resolve(res);
-					} else {
+					} else if(xhr.status != 0){
 						this.beforeResponse(xhr);
 						config.beforeResponse(xhr);
-						reject(xhr);
+						reject(new Error('Request failed with status code ' + xhr.status));
 					}
 				} else if (xhr.readyState == 1) { //请求发送之前
 					config.beforeSend(xhr);
@@ -254,16 +254,19 @@ class Ruax {
 			}
 
 			//超时处理
-			xhr.ontimeout = () => {
-				reject(xhr);
+			xhr.ontimeout = e => {
+				this.beforeResponse(xhr);
+				config.beforeResponse(xhr);
+				reject(new Error('timeout of '+ config.timeout +'ms exceeded'));
 			}
 
 			//监听上传进度
-			xhr.upload.onprogress = (e) => {
+			xhr.upload.onprogress = e => {
 				config.onProgress(e);
 			}
 
 			if (config.dataType.toLowerCase() == "jsonp") {
+				config.beforeSend();
 				//创建 script 标签并加入到页面中
 				var callbackName = ('jsonp_' + Math.random()).replace(".", "");
 				var oHead = document.getElementsByTagName('head')[0];
@@ -272,6 +275,7 @@ class Ruax {
 				oHead.appendChild(oS);
 				//创建jsonp回调函数
 				window[callbackName] = (result) => {
+					config.complete()
 					oHead.removeChild(oS);
 					clearTimeout(oS.timer);
 					window[callbackName] = null;
@@ -287,9 +291,12 @@ class Ruax {
 				}
 				//超时处理
 				oS.timer = setTimeout(() => {
+					config.complete()
 					window[callbackName] = null;
 					oHead.removeChild(oS);
-					reject(new Error('请求超时'));
+					this.beforeResponse();
+					config.beforeResponse();
+					reject(new Error('timeout of '+ config.timeout +'ms exceeded'));
 				}, config.timeout);
 			} else {
 				if (config.type.toLowerCase() == 'get') {
