@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Ruax</title>
+	</head>
+	<body>
+	</body>
+	<script src="../dist/ruax.js" type="text/javascript" charset="utf-8"></script>
+	<script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.min.js"></script>
+	<script type="text/javascript">
+		var ruax = new Ruax()
+		ruax.beforeRequest = function(){
+			console.log('全局，请求发送之前')
+		}
+		ruax.beforeResponse = function(){
+			console.log('全局，请求响应完成')
+		}
+		ruax.create({
+			url:'http://192.162.2.169:9527/luckWheel/initWheelData2',
+			timeout:1000,
+			type:'post',
+			beforeSend:xhr=>{
+				console.log('加载...')
+			},
+			beforeResponse:()=>{
+				console.log('请求响应完成')
+			},
+			beforeRequest:()=>{
+				console.log('请求发送之前')
+			},
+			complete:xhr=>{
+				console.log('完成请求')
+			}
+		}).then(res=>{
+			console.log('请求成功')
+		}).catch(e=>{
+			console.log('请求失败',e.message)
+		})
+
+		// const server = axios.create({
+		// 	timeout: 10,
+		// 	responseType: 'json',
+		// 	method: 'POST'
+		// })
+		// server({
+		// 	url: 'https://www.mvi-web.cn/api/user/library/getLibraryById',
+		// 	data: {
+		// 		library_id: 11
+		// 	}
+		// }).then(res => {
+		// 	console.log(res)
+		// }).catch(e => {
+		// 	console.log(e)
+		// })
+	</script>
+</html>
