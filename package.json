@@ -1,6 +1,6 @@
 {
 	"name": "ruax",
-	"version": "1.4.9",
+	"version": "1.5.0",
 	"description": "一个轻量级的Javascript异步数据请求库",
 	"main": "dist/ruax.js",
 	"private": false,
@@ -22,5 +22,6 @@
 		"babel-core": "^6.26.3",
 		"babel-loader": "^7.1.5",
 		"babel-preset-env": "^1.7.0"
-	}
+	},
+	"github":"https://github.com/lovelin0523/ruax"
 }
