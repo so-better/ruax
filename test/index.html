@@ -7,7 +7,6 @@
 	<body>
 	</body>
 	<script src="../dist/ruax.js" type="text/javascript" charset="utf-8"></script>
-	<script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.min.js"></script>
 	<script type="text/javascript">
 		var ruax = new Ruax()
 		ruax.beforeRequest = function(){
@@ -37,21 +36,5 @@
 		}).catch(e=>{
 			console.log('请求失败',e.message)
 		})
-
-		// const server = axios.create({
-		// 	timeout: 10,
-		// 	responseType: 'json',
-		// 	method: 'POST'
-		// })
-		// server({
-		// 	url: 'https://www.mvi-web.cn/api/user/library/getLibraryById',
-		// 	data: {
-		// 		library_id: 11
-		// 	}
-		// }).then(res => {
-		// 	console.log(res)
-		// }).catch(e => {
-		// 	console.log(e)
-		// })
 	</script>
 </html>
