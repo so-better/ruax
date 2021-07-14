@@ -76,6 +76,10 @@ class Ruax {
 		if (typeof config.async != 'boolean') {
 			config.async = this.defaults.async;
 		}
+		//跨站点访问控制
+		if (typeof config.withCredentials != 'boolean'){
+			config.withCredentials = this.defaults.withCredentials;
+		}
 		//请求发送前
 		if (typeof config.beforeSend != 'function') {
 			config.beforeSend = this.defaults.beforeSend;
@@ -164,6 +168,10 @@ class Ruax {
 		//async异步
 		if (typeof this.defaults.async != 'boolean') {
 			this.defaults.async = true;
+		}
+		//跨站点访问控制
+		if (typeof this.defaults.withCredentials != 'boolean'){
+			this.defaults.withCredentials = false;
 		}
 		//请求发送前
 		if (typeof this.defaults.beforeSend != 'function') {
@@ -326,6 +334,7 @@ class Ruax {
 					if (typeof config.contentType == 'string') {
 						xhr.setRequestHeader('Content-Type', config.contentType)
 					}
+					xhr.withCredentials = config.withCredentials;
 					xhr.send(null)
 				} else if (config.type.toLocaleLowerCase() == 'post') {
 					xhr.open('POST', config.baseUrl + config.url, config.async);
@@ -344,6 +353,7 @@ class Ruax {
 					if (config.processData) {
 						config.data = this._getParams(config.data); //转换成序列化参数
 					}
+					xhr.withCredentials = config.withCredentials;
 					xhr.send(config.data);
 				}
 				config.cancelRequest(function() {
