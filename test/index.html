@@ -9,28 +9,10 @@
 	<script src="../dist/ruax.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript">
 		var ruax = new Ruax()
-		ruax.beforeRequest = function(){
-			console.log('全局，请求发送之前')
-		}
-		ruax.beforeResponse = function(){
-			console.log('全局，请求响应完成')
-		}
+		ruax.defaults.withCredentials = true;
 		ruax.create({
-			url:'http://192.162.2.169:9527/luckWheel/initWheelData2',
-			timeout:1000,
-			type:'post',
-			beforeSend:xhr=>{
-				console.log('加载...')
-			},
-			beforeResponse:()=>{
-				console.log('请求响应完成')
-			},
-			beforeRequest:()=>{
-				console.log('请求发送之前')
-			},
-			complete:xhr=>{
-				console.log('完成请求')
-			}
+			url:'http://192.168.2.118:8082/api/mall/subject/getSubjects',
+			type:'post'
 		}).then(res=>{
 			console.log('请求成功')
 		}).catch(e=>{

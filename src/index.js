@@ -314,7 +314,6 @@ class Ruax {
 					reject(new Error('timeout of ' + config.timeout + 'ms exceeded'));
 				}, config.timeout);
 			} else {
-				xhr.withCredentials = config.withCredentials;
 				if (config.type.toLocaleLowerCase() == 'get') {
 					if (this._getParams(config.data)) {
 						xhr.open("GET", config.baseUrl + config.url + '?' + this._getParams(config.data),
@@ -335,6 +334,7 @@ class Ruax {
 					if (typeof config.contentType == 'string') {
 						xhr.setRequestHeader('Content-Type', config.contentType)
 					}
+					xhr.withCredentials = config.withCredentials;
 					xhr.send(null)
 				} else if (config.type.toLocaleLowerCase() == 'post') {
 					xhr.open('POST', config.baseUrl + config.url, config.async);
@@ -353,6 +353,7 @@ class Ruax {
 					if (config.processData) {
 						config.data = this._getParams(config.data); //转换成序列化参数
 					}
+					xhr.withCredentials = config.withCredentials;
 					xhr.send(config.data);
 				}
 				config.cancelRequest(function() {
