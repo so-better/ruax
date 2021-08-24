@@ -1,4 +1,5 @@
 const path = require('path')
+
 let params = {
 	entry: './src/index.js', //入口文件
 	output: { //输出
@@ -15,7 +16,9 @@ let params = {
 		}]
 	}
 }
-if(process.env.NODE_ENV == "production"){
-	params.devtool = 'eval-source-map'//调试可看到源码
+
+if (process.env.NODE_ENV == "development") {
+	params.devtool = 'eval-source-map' //调试可看到源码
 }
-module.exports = params;
+
+module.exports = params

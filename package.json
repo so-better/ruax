@@ -1,13 +1,12 @@
 {
 	"name": "ruax",
-	"version": "1.6.4",
+	"version": "1.6.5",
 	"description": "一个轻量级的Javascript异步数据请求库",
 	"main": "dist/ruax.js",
 	"private": false,
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"serve": "webpack --mode development",
-		"build": "webpack --mode production"
+		"serve": "cross-env NODE_ENV=development webpack",
+		"build": "cross-env NODE_ENV=production webpack"
 	},
 	"author": "lingkai",
 	"license": "MIT",
@@ -21,7 +20,8 @@
 	"devDependencies": {
 		"babel-core": "^6.26.3",
 		"babel-loader": "^7.1.5",
-		"babel-preset-env": "^1.7.0"
+		"babel-preset-env": "^1.7.0",
+		"cross-env": "^7.0.3"
 	},
 	"repository": {
 		"type": "git",
