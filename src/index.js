@@ -247,8 +247,8 @@ class Ruax {
         //校验config数据
         config = this._getValidationConfig(config)
 
-        this.beforeRequest(config)
-        config.beforeRequest(config)
+        this.beforeRequest.apply(this, [config])
+        config.beforeRequest.apply(this, [config])
         //Promise回调
         return new Promise((resolve, reject) => {
             //创建XMLHttpRequest对象
@@ -260,7 +260,7 @@ class Ruax {
             //给请求添加状态变化事件处理函数
             xhr.onreadystatechange = e => {
                 if (xhr.readyState == 4) {
-                    config.complete(xhr)
+                    config.complete.apply(this, [xhr])
                     if (xhr.status == 200) {
                         let res
                         if (config.dataType.toLocaleLowerCase() == 'json') {
@@ -286,12 +286,12 @@ class Ruax {
                         } else {
                             res = xhr.responseText
                         }
-                        this.beforeResponse(xhr, res)
-                        config.beforeResponse(xhr, res)
+                        this.beforeResponse.apply(this, [xhr, res])
+                        config.beforeResponse.apply(this, [xhr, res])
                         resolve(res)
                     } else if (xhr.status != 0) {
-                        this.beforeResponse(xhr)
-                        config.beforeResponse(xhr)
+                        this.beforeResponse.apply(this, [xhr])
+                        config.beforeResponse.apply(this, [xhr])
                         reject(
                             new Error(
                                 'Request failed with status code ' + xhr.status
@@ -300,14 +300,14 @@ class Ruax {
                     }
                 } else if (xhr.readyState == 1) {
                     //请求发送之前
-                    config.beforeSend(xhr)
+                    config.beforeSend.apply(this, [xhr])
                 }
             }
 
             //超时处理
             xhr.ontimeout = e => {
-                this.beforeResponse(xhr)
-                config.beforeResponse(xhr)
+                this.beforeResponse.apply(this, [xhr])
+                config.beforeResponse.apply(this, [xhr])
                 reject(
                     new Error('timeout of ' + config.timeout + 'ms exceeded')
                 )
@@ -315,11 +315,11 @@ class Ruax {
 
             //监听上传进度
             xhr.upload.onprogress = e => {
-                config.onProgress(e)
+                config.onProgress.apply(this, [e])
             }
 
             if (config.dataType.toLocaleLowerCase() == 'jsonp') {
-                config.beforeSend()
+                config.beforeSend.apply(this)
                 //创建 script 标签并加入到页面中
                 let callbackName = ('jsonp_' + Math.random()).replace('.', '')
                 let oHead = document.getElementsByTagName('head')[0]
@@ -328,12 +328,12 @@ class Ruax {
                 oHead.appendChild(oS)
                 //创建jsonp回调函数
                 window[callbackName] = result => {
-                    config.complete()
+                    config.complete.apply(this)
                     oHead.removeChild(oS)
                     clearTimeout(oS.timer)
                     window[callbackName] = null
-                    this.beforeResponse(result)
-                    config.beforeResponse(result)
+                    this.beforeResponse.apply(this, [result])
+                    config.beforeResponse.apply(this, [result])
                     resolve(result)
                 }
                 //发送请求
@@ -354,11 +354,11 @@ class Ruax {
                 }
                 //超时处理
                 oS.timer = setTimeout(() => {
-                    config.complete()
+                    config.complete.apply(this)
                     window[callbackName] = null
                     oHead.removeChild(oS)
-                    this.beforeResponse()
-                    config.beforeResponse()
+                    this.beforeResponse.apply(this)
+                    config.beforeResponse.apply(this)
                     reject(
                         new Error(
                             'timeout of ' + config.timeout + 'ms exceeded'
@@ -419,9 +419,10 @@ class Ruax {
                     xhr.withCredentials = config.withCredentials
                     xhr.send(config.data)
                 }
-                config.cancelRequest(function () {
+                const abort = function () {
                     xhr.abort()
-                })
+                }
+                config.cancelRequest.apply(this, [abort])
             }
         })
     }
