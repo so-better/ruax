@@ -1,3 +1,7 @@
 # 忽略目录
-node_modules/
-test/
+example/
+public/
+index.html
+
+# 忽略指定文件
+vite.config.js

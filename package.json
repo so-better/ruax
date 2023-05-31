@@ -1,30 +1,36 @@
 {
-    "name": "ruax",
-    "version": "1.6.7",
-    "description": "一个轻量级的Javascript异步数据请求库",
-    "main": "dist/ruax.js",
-    "private": false,
-    "scripts": {
-        "serve": "cross-env NODE_ENV=development webpack",
-        "build": "cross-env NODE_ENV=production webpack"
-    },
-    "author": "lingkai",
-    "license": "MIT",
-    "dependencies": {},
-    "babel": {
-        "presets": [
-            "env"
-        ],
-        "plugins": []
-    },
-    "devDependencies": {
-        "babel-core": "^6.26.3",
-        "babel-loader": "^7.1.5",
-        "babel-preset-env": "^1.7.0",
-        "cross-env": "^7.0.3"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/lovelin0523/ruax"
-    }
+	"name": "ruax",
+	"version": "1.6.8",
+	"private": false,
+	"type": "module",
+	"author": "lingkai",
+	"main": "lib/ruax.umd.js",
+	"module": "lib/ruax.es.js",
+	"license": "MIT",
+	"description": "一个轻量级的Javascript异步数据请求库",
+	"scripts": {
+		"dev": "vite --host",
+		"lib": "vite build"
+	},
+	"dependencies": {
+		"vue": "^3.2.47"
+	},
+	"devDependencies": {
+		"@vitejs/plugin-vue": "^4.1.0",
+		"less": "^3.0.4",
+		"less-loader": "^5.0.0",
+		"terser": "^5.16.9",
+		"unplugin-auto-import": "^0.15.3",
+		"vite": "^4.3.2",
+		"vite-plugin-vue-setup-extend": "^0.4.0"
+	},
+	"browserslist": [
+		"> 1%",
+		"last 2 versions",
+		"not dead"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/lovelin0523/ruax"
+	}
 }
