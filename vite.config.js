@@ -26,7 +26,7 @@ export default defineConfig({
 		minify: 'terser',
 		lib: {
 			entry: path.resolve(__dirname, 'src/index.js'),
-			name: 'ruax',
+			name: 'Ruax',
 			fileName: format => `ruax.${format}.js`
 		},
 		rollupOptions: {
