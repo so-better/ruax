@@ -242,13 +242,13 @@ class Ruax {
 						} else {
 							res = xhr.responseText
 						}
-						this.beforeResponse.apply(this, [xhr, res])
-						config.beforeResponse.apply(this, [xhr, res])
-						resolve(res)
+						let response = this.beforeResponse.apply(this, [xhr, res])
+						response = config.beforeResponse.apply(this, [xhr, res])
+						resolve(response || res)
 					} else if (xhr.status != 0) {
-						this.beforeResponse.apply(this, [xhr])
-						config.beforeResponse.apply(this, [xhr])
-						reject(new Error('Request failed with status code ' + xhr.status))
+						let error = this.beforeResponse.apply(this, [xhr])
+						error = config.beforeResponse.apply(this, [xhr])
+						reject(error || new Error('Request failed with status code ' + xhr.status))
 					}
 				} else if (xhr.readyState == 1) {
 					//请求发送之前
@@ -258,9 +258,9 @@ class Ruax {
 
 			//超时处理
 			xhr.ontimeout = e => {
-				this.beforeResponse.apply(this, [xhr])
-				config.beforeResponse.apply(this, [xhr])
-				reject(new Error('timeout of ' + config.timeout + 'ms exceeded'))
+				let error = this.beforeResponse.apply(this, [xhr])
+				error = config.beforeResponse.apply(this, [xhr])
+				reject(error || new Error('timeout of ' + config.timeout + 'ms exceeded'))
 			}
 
 			//监听上传进度
@@ -282,9 +282,9 @@ class Ruax {
 					oHead.removeChild(oS)
 					clearTimeout(oS.timer)
 					window[callbackName] = null
-					this.beforeResponse.apply(this, [result])
-					config.beforeResponse.apply(this, [result])
-					resolve(result)
+					let response = this.beforeResponse.apply(this, [result])
+					response = config.beforeResponse.apply(this, [result])
+					resolve(response || result)
 				}
 				//发送请求
 				if ((config.baseUrl + config.url).indexOf('?') > -1) {
@@ -299,9 +299,9 @@ class Ruax {
 					config.complete.apply(this)
 					window[callbackName] = null
 					oHead.removeChild(oS)
-					this.beforeResponse.apply(this)
-					config.beforeResponse.apply(this)
-					reject(new Error('timeout of ' + config.timeout + 'ms exceeded'))
+					let error = this.beforeResponse.apply(this)
+					error = config.beforeResponse.apply(this)
+					reject(error || new Error('timeout of ' + config.timeout + 'ms exceeded'))
 				}, config.timeout)
 			} else {
 				if (config.type.toLocaleLowerCase() == 'get') {

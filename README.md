@@ -1,3 +1,3 @@
 #### 一个轻量的前端封装异步请求的 JS 库
 
-> 具体使用方法请参阅：[ruax](https://www.mvi-web.cn/library/ruax)
+> 具体使用方法请参阅：[ruax](https://www.ling0523.cn/ruax/)
