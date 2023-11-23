@@ -242,12 +242,12 @@ class Ruax {
 						} else {
 							res = xhr.responseText
 						}
-						let response = this.beforeResponse.apply(this, [xhr, res])
-						response = config.beforeResponse.apply(this, [xhr, res])
+						let response = this.beforeResponse.apply(this, [{ response: res, xhr, config }])
+						response = config.beforeResponse.apply(this, [{ response: res, xhr, config }])
 						resolve(response || res)
 					} else if (xhr.status != 0) {
-						let error = this.beforeResponse.apply(this, [xhr])
-						error = config.beforeResponse.apply(this, [xhr])
+						let error = this.beforeResponse.apply(this, [{ xhr, config }])
+						error = config.beforeResponse.apply(this, [{ xhr, config }])
 						reject(error || new Error('Request failed with status code ' + xhr.status))
 					}
 				} else if (xhr.readyState == 1) {
@@ -258,8 +258,8 @@ class Ruax {
 
 			//超时处理
 			xhr.ontimeout = e => {
-				let error = this.beforeResponse.apply(this, [xhr])
-				error = config.beforeResponse.apply(this, [xhr])
+				let error = this.beforeResponse.apply(this, [{ xhr, config }])
+				error = config.beforeResponse.apply(this, [{ xhr, config }])
 				reject(error || new Error('timeout of ' + config.timeout + 'ms exceeded'))
 			}
 
@@ -282,8 +282,8 @@ class Ruax {
 					oHead.removeChild(oS)
 					clearTimeout(oS.timer)
 					window[callbackName] = null
-					let response = this.beforeResponse.apply(this, [result])
-					response = config.beforeResponse.apply(this, [result])
+					let response = this.beforeResponse.apply(this, [{ response: result, config }])
+					response = config.beforeResponse.apply(this, [{ response: result, config }])
 					resolve(response || result)
 				}
 				//发送请求
@@ -299,8 +299,8 @@ class Ruax {
 					config.complete.apply(this)
 					window[callbackName] = null
 					oHead.removeChild(oS)
-					let error = this.beforeResponse.apply(this)
-					error = config.beforeResponse.apply(this)
+					let error = this.beforeResponse.apply(this, { config })
+					error = config.beforeResponse.apply(this, { config })
 					reject(error || new Error('timeout of ' + config.timeout + 'ms exceeded'))
 				}, config.timeout)
 			} else {
