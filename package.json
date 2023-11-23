@@ -1,9 +1,9 @@
 {
 	"name": "ruax",
-	"version": "1.7.2",
+	"version": "1.7.3",
 	"private": false,
 	"type": "module",
-	"author": "lingkai",
+	"author": "ling0523",
 	"main": "lib/ruax.umd.js",
 	"module": "lib/ruax.es.js",
 	"license": "MIT",
