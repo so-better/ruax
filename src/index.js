@@ -1,8 +1,6 @@
 class Ruax {
 	constructor() {
 		this.defaults = {} //全局默认参数配置
-		this.beforeRequest = function () {} //请求发送前的触发函数
-		this.beforeResponse = function () {} //请求响应到then/catch前触发的函数
 	}
 
 	//对create的参数config进行初始化，获取初始化后的config
@@ -200,18 +198,10 @@ class Ruax {
 	create(config) {
 		//初始化defaults数据
 		this.__setDefaults()
-		//初始化beforeRequest和beforeResponse
-		if (typeof this.beforeRequest != 'function') {
-			this.beforeRequest = function () {}
-		}
-		if (typeof this.beforeResponse != 'function') {
-			this.beforeResponse = function () {}
-		}
 		//校验config数据
 		config = this.__getValidationConfig(config)
-
-		this.beforeRequest.apply(this, [config])
-		config.beforeRequest.apply(this, [config])
+		//执行beforeRequest
+		config = config.beforeRequest.apply(this, [config])
 		//Promise回调
 		return new Promise((resolve, reject) => {
 			//创建XMLHttpRequest对象
@@ -242,13 +232,17 @@ class Ruax {
 						} else {
 							res = xhr.responseText
 						}
-						let response = this.beforeResponse.apply(this, [{ response: res, xhr, config }])
-						response = config.beforeResponse.apply(this, [{ response: res, xhr, config }])
-						resolve(response || res)
+						let response = config.beforeResponse.apply(this, [{ response: res, xhr, config }])
+						if (response instanceof Promise) {
+							return response
+						}
+						resolve(res)
 					} else if (xhr.status != 0) {
-						let error = this.beforeResponse.apply(this, [{ xhr, config }])
-						error = config.beforeResponse.apply(this, [{ xhr, config }])
-						reject(error || new Error('Request failed with status code ' + xhr.status))
+						let response = config.beforeResponse.apply(this, [{ xhr, config }])
+						if (response instanceof Promise) {
+							return response
+						}
+						reject(new Error('Request failed with status code ' + xhr.status))
 					}
 				} else if (xhr.readyState == 1) {
 					//请求发送之前
@@ -258,9 +252,11 @@ class Ruax {
 
 			//超时处理
 			xhr.ontimeout = e => {
-				let error = this.beforeResponse.apply(this, [{ xhr, config }])
-				error = config.beforeResponse.apply(this, [{ xhr, config }])
-				reject(error || new Error('timeout of ' + config.timeout + 'ms exceeded'))
+				let response = config.beforeResponse.apply(this, [{ xhr, config }])
+				if (response instanceof Promise) {
+					return response
+				}
+				reject(new Error('timeout of ' + config.timeout + 'ms exceeded'))
 			}
 
 			//监听上传进度
@@ -282,9 +278,11 @@ class Ruax {
 					oHead.removeChild(oS)
 					clearTimeout(oS.timer)
 					window[callbackName] = null
-					let response = this.beforeResponse.apply(this, [{ response: result, config }])
-					response = config.beforeResponse.apply(this, [{ response: result, config }])
-					resolve(response || result)
+					let response = config.beforeResponse.apply(this, [{ response: result, config }])
+					if (response instanceof Promise) {
+						return response
+					}
+					resolve(result)
 				}
 				//发送请求
 				if ((config.baseUrl + config.url).indexOf('?') > -1) {
@@ -299,9 +297,11 @@ class Ruax {
 					config.complete.apply(this)
 					window[callbackName] = null
 					oHead.removeChild(oS)
-					let error = this.beforeResponse.apply(this, { config })
-					error = config.beforeResponse.apply(this, { config })
-					reject(error || new Error('timeout of ' + config.timeout + 'ms exceeded'))
+					let response = config.beforeResponse.apply(this, { config })
+					if (response instanceof Promise) {
+						return response
+					}
+					reject(new Error('timeout of ' + config.timeout + 'ms exceeded'))
 				}, config.timeout)
 			} else {
 				if (config.type.toLocaleLowerCase() == 'get') {
