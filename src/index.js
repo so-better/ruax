@@ -145,7 +145,9 @@ class Ruax {
 				oHead.appendChild(oS)
 				//创建jsonp回调函数
 				window[callbackName] = result => {
-					config.complete.apply(this)
+					if (typeof config.complete == 'function') {
+						config.complete.apply(this)
+					}
 					oHead.removeChild(oS)
 					clearTimeout(oS.timer)
 					window[callbackName] = null
