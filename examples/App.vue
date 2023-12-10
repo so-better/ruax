@@ -10,7 +10,14 @@ export default {
 		const ruax = new Ruax()
 		//cljLL4sT7G8qlVKvvBqLskqWAfCOMjow
 		ruax.create({
-			url: 'https://api.map.baidu.com/place/v2/search?query=银行&location=39.915,116.404&radius=2000&output=json&ak=cljLL4sT7G8qlVKvvBqLskqWAfCOMjow',
+			url: 'https://api.map.baidu.com/place/v2/search',
+			data: {
+				query: '银行',
+				location: '39.915,116.404',
+				radius: '2000',
+				output: 'json',
+				ak: 'cljLL4sT7G8qlVKvvBqLskqWAfCOMjow'
+			},
 			dataType: 'jsonp'
 		})
 			.then(res => {
