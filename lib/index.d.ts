@@ -5,7 +5,7 @@ type ConfigurationType = {
     baseUrl?: string;
     url?: string;
     data?: ObjectType | string;
-    type?: 'get' | 'post';
+    type?: 'get' | 'post' | 'POST' | 'GET';
     timeout?: number;
     dataType?: 'json' | 'string' | 'xml' | 'html' | 'blob' | 'jsonp';
     jsonpCallback?: string;

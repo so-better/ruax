@@ -10,7 +10,7 @@ type ConfigurationType = {
 	//data请求数据
 	data?: ObjectType | string
 	//type请求方式post/get
-	type?: 'get' | 'post'
+	type?: 'get' | 'post' | 'POST' | 'GET'
 	//timeout请求超时时间
 	timeout?: number
 	//dataType返回参数类型
