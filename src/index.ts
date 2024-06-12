@@ -1,3 +1,5 @@
+import { common as DapCommon } from 'dap-util'
+
 type ObjectType = {
 	[key: string]: any
 }
@@ -100,7 +102,7 @@ class Ruax {
 	//对create的参数config进行初始化，获取初始化后的config
 	private __getValidatedConfig(config: ConfigurationType) {
 		//初始化为defaults
-		let returnConfig = JSON.parse(JSON.stringify(this.defaults))
+		let returnConfig = DapCommon.clone(this.defaults)
 		//如果传入的config是对象
 		if (typeof config == 'object' && config) {
 			if (typeof config.baseUrl == 'string') {
