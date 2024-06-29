@@ -1,6 +1,6 @@
 {
 	"name": "ruax",
-	"version": "1.8.5",
+	"version": "1.8.6",
 	"private": false,
 	"type": "module",
 	"author": "so-better",
@@ -14,7 +14,7 @@
 		"lib": "vue-tsc && vite build"
 	},
 	"dependencies": {
-		"dap-util": "^1.5.5",
+		"dap-util": "^1.5.7",
 		"vue": "^3.2.47"
 	},
 	"devDependencies": {
