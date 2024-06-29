@@ -1,9 +1,9 @@
 {
 	"name": "ruax",
-	"version": "1.8.4",
+	"version": "1.8.5",
 	"private": false,
 	"type": "module",
-	"author": "ling0523",
+	"author": "so-better",
 	"main": "lib/ruax.umd.js",
 	"module": "lib/ruax.es.js",
 	"types": "lib/index.d.ts",
@@ -35,6 +35,6 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/ling0523/ruax"
+		"url": "https://github.com/so-better/ruax"
 	}
 }
