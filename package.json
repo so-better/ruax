@@ -1,6 +1,6 @@
 {
 	"name": "ruax",
-	"version": "1.8.3",
+	"version": "1.8.4",
 	"private": false,
 	"type": "module",
 	"author": "ling0523",
@@ -14,7 +14,7 @@
 		"lib": "vue-tsc && vite build"
 	},
 	"dependencies": {
-		"dap-util": "^1.5.4",
+		"dap-util": "^1.5.5",
 		"vue": "^3.2.47"
 	},
 	"devDependencies": {
