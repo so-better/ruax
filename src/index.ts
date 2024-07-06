@@ -1,10 +1,10 @@
 import { common as DapCommon } from 'dap-util'
 
-type ObjectType = {
+export type ObjectType = {
 	[key: string]: any
 }
 
-type ConfigurationType = {
+export type ConfigurationType = {
 	//baseUrl基本路径
 	baseUrl?: string
 	//url路径
@@ -45,14 +45,14 @@ type ConfigurationType = {
 	beforeResponse?: null | ((res: BeforeResponeParamType) => void | Promise<any>)
 }
 
-type BeforeResponeParamType = {
+export type BeforeResponeParamType = {
 	config?: ConfigurationType
 	response?: any
 	error?: Error
 	xhr?: XMLHttpRequest
 }
 
-class Ruax {
+export class Ruax {
 	defaults: ConfigurationType
 
 	constructor() {

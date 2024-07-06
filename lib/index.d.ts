@@ -1,7 +1,7 @@
-type ObjectType = {
+export type ObjectType = {
     [key: string]: any;
 };
-type ConfigurationType = {
+export type ConfigurationType = {
     baseUrl?: string;
     url?: string;
     data?: ObjectType | string;
@@ -22,13 +22,13 @@ type ConfigurationType = {
     beforeRequest?: null | ((config: ConfigurationType) => ConfigurationType);
     beforeResponse?: null | ((res: BeforeResponeParamType) => void | Promise<any>);
 };
-type BeforeResponeParamType = {
+export type BeforeResponeParamType = {
     config?: ConfigurationType;
     response?: any;
     error?: Error;
     xhr?: XMLHttpRequest;
 };
-declare class Ruax {
+export declare class Ruax {
     defaults: ConfigurationType;
     constructor();
     private __getValidatedConfig;
