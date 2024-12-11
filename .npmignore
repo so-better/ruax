@@ -1,7 +1,19 @@
 # 忽略目录
-example/
+examples/
 public/
-index.html
+docs/
+src/
 
 # 忽略指定文件
+LICENSE
+index.html
 vite.config.ts
+tsconfig.json
+tsconfig.node.json
+package-lock.json
+vite-env.d.ts
+
+
+
+
+

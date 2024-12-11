@@ -1,6 +1,7 @@
 .DS_Store
 node_modules
 /dist
+docs/ruax
 
 # local env files
 .env.local
@@ -21,3 +22,4 @@ yarn-error.log*
 *.sw?
 
 /package-lock.json
+
