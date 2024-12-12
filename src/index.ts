@@ -139,7 +139,7 @@ class Ruax {
     let newOptions = this.deleteProperty<RuaxCreateOptions>(options, ['beforeRequest', 'beforeResponse'])
     if (beforeRequest) newOptions = beforeRequest.apply(this, [newOptions])
     //获取参数配置
-    const { baseUrl = this.baseUrl, url, method = this.method, headers = this.headers, responseType = this.responseType, body, timeout = this.timeout, mode = this.mode, cache = this.cache, cancelRequest = this.cancelRequest, onProgress = this.onProgress } = newOptions
+    const { baseUrl = this.baseUrl, url, method = this.method, headers, responseType = this.responseType, body, timeout = this.timeout, mode = this.mode, cache = this.cache, cancelRequest = this.cancelRequest, onProgress = this.onProgress } = newOptions
     //发送请求
     let response = await this.fetchWrapper({
       timeout,
@@ -147,10 +147,10 @@ class Ruax {
       input: `${baseUrl}${url}`,
       init: {
         method: method.toLocaleUpperCase(),
-        headers,
+        headers: { ...this.headers, ...headers },
         mode,
         cache,
-        body: responseType == 'json' ? JSON.stringify(body) : body
+        body
       }
     })
     //请求异常处理
@@ -186,6 +186,27 @@ class Ruax {
       const data = await response.arrayBuffer()
       return beforeResponse ? beforeResponse.apply(this, [data]) : data
     }
+  }
+
+  /**
+   * 发送POST请求
+   */
+  async post(url: string, body: BodyInit) {
+    return this.create({
+      method: 'POST',
+      url,
+      body
+    })
+  }
+
+  /**
+   * 发送GET请求
+   */
+  async get(url: string) {
+    return this.create({
+      method: 'GET',
+      url
+    })
   }
 
   /**

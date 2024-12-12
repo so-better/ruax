@@ -13,16 +13,16 @@ export default {
 			return options
 		}
 		ruax.beforeResponse = (data) => {
-			console.log('beforeResponse', data);
-			return data
+			return new Promise((resolve) => {
+				setTimeout(() => {
+					resolve(data.data)
+				}, 3000);
+			})
 		}
 		ruax.create({
 			url: 'https://www.so-better.cn/api/lib/all?a=1',
 			responseType: 'json',
-			method: 'post',
-			body: {
-				a: 1
-			},
+			method: 'post'
 		}).then(data => {
 			console.log(data);
 		})

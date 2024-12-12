@@ -126,6 +126,14 @@ declare class Ruax {
      */
     create(options: RuaxCreateOptionsWithInterceptor): Promise<any>;
     /**
+     * 发送POST请求
+     */
+    post(url: string, body: BodyInit): Promise<any>;
+    /**
+     * 发送GET请求
+     */
+    get(url: string): Promise<any>;
+    /**
      * 删除对象的某个属性
      */
     private deleteProperty;
