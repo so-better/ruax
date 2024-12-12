@@ -4,7 +4,6 @@
 	</div>
 </template>
 <script>
-import { string } from 'dap-util';
 import Ruax from '../src'
 export default {
 	async mounted() {
@@ -26,7 +25,6 @@ export default {
 			},
 		}).then(data => {
 			console.log(data);
-
 		})
 	}
 }

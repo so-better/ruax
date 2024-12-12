@@ -2,7 +2,7 @@ import { common as DapCommon } from 'dap-util'
 /**
  * 请求返回类型
  */
-export type RuaxResponseType = 'json' | 'text' | 'blob'
+export type RuaxResponseType = 'json' | 'text' | 'blob' | 'arrayBuffer' | 'formData'
 
 /**
  * fetch入参
@@ -171,15 +171,25 @@ class Ruax {
       const data = await response.blob()
       return beforeResponse ? beforeResponse.apply(this, [data]) : data
     }
-    //文本数据
+    //text数据
     if (responseType == 'text') {
       const data = await response.text()
+      return beforeResponse ? beforeResponse.apply(this, [data]) : data
+    }
+    //formData数据
+    if (responseType == 'formData') {
+      const data = await response.formData()
+      return beforeResponse ? beforeResponse.apply(this, [data]) : data
+    }
+    //arrayBuffer二进制数据
+    if (responseType == 'arrayBuffer') {
+      const data = await response.arrayBuffer()
       return beforeResponse ? beforeResponse.apply(this, [data]) : data
     }
   }
 
   /**
-   * 删除json对象的某个属性
+   * 删除对象的某个属性
    */
   private deleteProperty<T>(data: any, keys: string[]) {
     const newData = DapCommon.clone(data)

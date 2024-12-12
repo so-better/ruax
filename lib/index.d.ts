@@ -1,40 +1,141 @@
-export type ObjectType = {
-    [key: string]: any;
-};
-export type ConfigurationType = {
-    baseUrl?: string;
-    url?: string;
-    data?: ObjectType | string;
-    type?: 'get' | 'post' | 'POST' | 'GET';
+/**
+ * 请求返回类型
+ */
+export type RuaxResponseType = 'json' | 'text' | 'blob' | 'arrayBuffer' | 'formData';
+/**
+ * fetch入参
+ */
+export type RuaxFetchWithTimeoutOptionsType = {
     timeout?: number;
-    dataType?: 'json' | 'string' | 'xml' | 'html' | 'blob' | 'jsonp';
-    jsonpCallback?: string;
-    headers?: ObjectType;
-    contentType?: string | boolean;
-    processData?: boolean;
-    cache?: boolean;
-    async?: boolean;
-    withCredentials?: boolean;
-    beforeSend?: null | ((xhr?: XMLHttpRequest) => void);
-    complete?: null | ((xhr?: XMLHttpRequest) => void);
-    onProgress?: null | ((e: ProgressEvent) => void);
-    cancelRequest?: null | ((abort: () => void) => void);
-    beforeRequest?: null | ((config: ConfigurationType) => ConfigurationType);
-    beforeResponse?: null | ((res: BeforeResponeParamType) => void | Promise<any>);
+    cancelRequest?: (abortFun: typeof AbortController.prototype.abort) => void;
+    input: RequestInfo | URL;
+    init?: RequestInit;
 };
-export type BeforeResponeParamType = {
-    config?: ConfigurationType;
-    response?: any;
-    error?: Error;
-    xhr?: XMLHttpRequest;
-};
-export declare class Ruax {
-    defaults: ConfigurationType;
-    constructor();
-    private __getValidatedConfig;
-    private __getParams;
-    create(config: ConfigurationType): Promise<any>;
-    post(url: string, data?: ObjectType): Promise<any>;
-    get(url: string, data?: ObjectType): Promise<any>;
+/**
+ * 基本请求入参类型
+ */
+export interface RuaxCreateOptions {
+    /**
+     * 请求地址
+     */
+    url: string;
+    /**
+     * 请求入参
+     */
+    body?: BodyInit;
+    /**
+     * 基本地址
+     */
+    baseUrl?: string;
+    /**
+     * 请求方法
+     */
+    method?: string;
+    /**
+     * 请求头
+     */
+    headers?: HeadersInit;
+    /**
+     * 请求返回类型
+     */
+    responseType?: RuaxResponseType;
+    /**
+     * 超时时间，单位ms
+     */
+    timeout?: number;
+    /**
+     * 跨域行为
+     */
+    mode?: RequestMode;
+    /**
+     * 缓存策略
+     */
+    cache?: RequestCache;
+    /**
+     * 取消请求
+     */
+    cancelRequest?: (abortFun: typeof AbortController.prototype.abort) => void;
+    /**
+     * 请求进度
+     */
+    onProgress?: (value: number) => void;
 }
-export default Ruax;
+/**
+ * 创建请求入参类型
+ */
+export interface RuaxCreateOptionsWithInterceptor extends RuaxCreateOptions {
+    /**
+     * 请求拦截
+     */
+    beforeRequest?: (options: RuaxCreateOptions) => RuaxCreateOptions;
+    /**
+     * 响应拦截
+     */
+    beforeResponse?: (data: any) => Promise<any> | any;
+}
+/**
+ * 请求对象
+ */
+declare class Ruax {
+    /**
+     * 默认基本地址
+     */
+    baseUrl: string;
+    /**
+     * 默认请求方法
+     */
+    method: string;
+    /**
+     * 默认请求头
+     */
+    headers: HeadersInit;
+    /**
+     * 默认返回类型
+     */
+    responseType: RuaxResponseType;
+    /**
+     * 默认超时时间
+     */
+    timeout: number;
+    /**
+     * 默认的跨域行为
+     */
+    mode: RequestMode;
+    /**
+     * 缓存策略
+     */
+    cache: RequestCache;
+    /**
+     * 请求拦截
+     */
+    beforeRequest?: (options: RuaxCreateOptions) => RuaxCreateOptions;
+    /**
+     * 响应拦截
+     */
+    beforeResponse?: (data: any) => Promise<any> | any;
+    /**
+     * 取消请求
+     */
+    cancelRequest?: (abortFun: typeof AbortController.prototype.abort) => void;
+    /**
+     * 请求进度
+     */
+    onProgress?: (value: number) => void;
+    /**
+     * 创建请求
+     */
+    create(options: RuaxCreateOptionsWithInterceptor): Promise<any>;
+    /**
+     * 删除对象的某个属性
+     */
+    private deleteProperty;
+    /**
+     * 包括超时设置功能的fetch函数
+     */
+    private fetchWrapper;
+    /**
+     * 读取进度
+     */
+    private readProgress;
+}
+export { Ruax, Ruax as default };
