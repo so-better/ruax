@@ -128,7 +128,7 @@ declare class Ruax {
     /**
      * 发送POST请求
      */
-    post(url: string, body: BodyInit): Promise<any>;
+    post(url: string, body?: BodyInit): Promise<any>;
     /**
      * 发送GET请求
      */

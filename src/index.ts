@@ -191,7 +191,7 @@ class Ruax {
   /**
    * 发送POST请求
    */
-  async post(url: string, body: BodyInit) {
+  async post(url: string, body?: BodyInit) {
     return this.create({
       method: 'POST',
       url,
