@@ -71,7 +71,7 @@ export interface RuaxCreateOptionsWithInterceptor extends RuaxCreateOptions {
     /**
      * 响应拦截
      */
-    beforeResponse?: (data: any) => Promise<any> | any;
+    beforeResponse?: (data: any, options: RuaxCreateOptions) => Promise<any> | any;
 }
 /**
  * 请求对象
@@ -112,7 +112,7 @@ declare class Ruax {
     /**
      * 响应拦截
      */
-    beforeResponse?: (data: any) => Promise<any> | any;
+    beforeResponse?: (data: any, options: RuaxCreateOptions) => Promise<any> | any;
     /**
      * 取消请求
      */
