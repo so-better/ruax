@@ -115,9 +115,9 @@ ruax.beforeRequest = options => {
 }
 ```
 
-## beforeResponse <Badge type="danger" text="(data: any) => Promise<any> | any" />
+## beforeResponse <Badge type="danger" text="(response: Response, data?: any, options?: RuaxCreateOptions) => Promise<any> | any" />
 
-响应拦截函数，该方法会在请求成功后触发，回调参数为请求返回的数据，你必须返回一个数据传递下去，支持异步函数
+响应拦截函数，该方法会在请求后触发，回调参数为请求对象、请求返回的数据（请求成功的情况下）和请求参数配置，该函数的结果会作为 `create` 方法的返回结果
 
 ```ts
 const ruax = new Ruax()
