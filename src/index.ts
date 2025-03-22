@@ -75,7 +75,7 @@ export interface RuaxCreateOptionsWithInterceptor extends RuaxCreateOptions {
   /**
    * 响应拦截
    */
-  beforeResponse?: (response: Response, data?: any, options?: RuaxCreateOptions) => Promise<any> | any
+  beforeResponse?: (response: Response, options: RuaxCreateOptions, data?: any) => Promise<any> | any
 }
 
 /**
@@ -117,7 +117,7 @@ class Ruax {
   /**
    * 响应拦截
    */
-  beforeResponse?: (response: Response, data?: any, options?: RuaxCreateOptions) => Promise<any> | any
+  beforeResponse?: (response: Response, options: RuaxCreateOptions, data?: any) => Promise<any> | any
   /**
    * 取消请求
    */
@@ -156,7 +156,7 @@ class Ruax {
     //请求异常处理
     if (!response.ok) {
       if (beforeResponse) {
-        return beforeResponse.apply(this, [response, null, newOptions])
+        return beforeResponse.apply(this, [response, newOptions, null])
       }
       throw new Error(`The fetch request failed, status code: ${response.status}, exception information: ${response.statusText}`)
     }
@@ -167,27 +167,27 @@ class Ruax {
     //json数据
     if (responseType == 'json') {
       const data = await response.json()
-      return beforeResponse ? beforeResponse.apply(this, [response, data, newOptions]) : data
+      return beforeResponse ? beforeResponse.apply(this, [response, newOptions, data]) : data
     }
     //blob数据
     if (responseType == 'blob') {
       const data = await response.blob()
-      return beforeResponse ? beforeResponse.apply(this, [response, data, newOptions]) : data
+      return beforeResponse ? beforeResponse.apply(this, [response, newOptions, data]) : data
     }
     //text数据
     if (responseType == 'text') {
       const data = await response.text()
-      return beforeResponse ? beforeResponse.apply(this, [response, data, newOptions]) : data
+      return beforeResponse ? beforeResponse.apply(this, [response, newOptions, data]) : data
     }
     //formData数据
     if (responseType == 'formData') {
       const data = await response.formData()
-      return beforeResponse ? beforeResponse.apply(this, [response, data, newOptions]) : data
+      return beforeResponse ? beforeResponse.apply(this, [response, newOptions, data]) : data
     }
     //arrayBuffer二进制数据
     if (responseType == 'arrayBuffer') {
       const data = await response.arrayBuffer()
-      return beforeResponse ? beforeResponse.apply(this, [response, data, newOptions]) : data
+      return beforeResponse ? beforeResponse.apply(this, [response, newOptions, data]) : data
     }
   }
 

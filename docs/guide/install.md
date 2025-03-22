@@ -6,7 +6,7 @@ title: 安装
 
 ## 下载 ruax 本地到使用
 
-- 下载地址：[ruax](https://registry.npmmirror.com/ruax/download/ruax-1.8.11.tgz)
+- 下载地址：[ruax](https://registry.npmmirror.com/ruax/download/ruax-1.8.12.tgz)
 - 下载完成后最终解压得到一个 package 文件夹，进入 package 文件夹后，将 package 目录下的整个 lib 目录拷贝到你的项目下
 - 在 html 页面中引入 js
 
@@ -28,7 +28,7 @@ title: 安装
 
 ```html
 <!-- 引入固定版本的ruax -->
-<script src="https://unpkg.com/ruax@1.8.11/lib/ruax.umd.js"></script>
+<script src="https://unpkg.com/ruax@1.8.12/lib/ruax.umd.js"></script>
 <!-- 始终引入最新的ruax -->
 <script src="https://unpkg.com/ruax/lib/ruax.umd.js"></script>
 ```
@@ -50,21 +50,21 @@ title: 安装
 npm install ruax
 
 # 安装指定版本
-npm install ruax@1.8.11
+npm install ruax@1.8.12
 ```
 
 ```bash [yarn]
 yarn install ruax
 
 # 安装指定版本
-yarn install ruax@1.8.11
+yarn install ruax@1.8.12
 ```
 
 ```bash [pnpm]
 pnpm install ruax
 
 # 安装指定版本
-pnpm install ruax@1.8.11
+pnpm install ruax@1.8.12
 ```
 
 :::
