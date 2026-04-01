@@ -54,17 +54,17 @@ npm install ruax@1.8.12
 ```
 
 ```bash [yarn]
-yarn install ruax
+yarn add ruax
 
 # 安装指定版本
-yarn install ruax@1.8.12
+yarn add ruax@1.8.12
 ```
 
 ```bash [pnpm]
-pnpm install ruax
+pnpm add ruax
 
 # 安装指定版本
-pnpm install ruax@1.8.12
+pnpm add ruax@1.8.12
 ```
 
 :::
