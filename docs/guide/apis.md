@@ -42,7 +42,7 @@ title: 请求方法
 
   - `beforeRequest`：请求拦截函数，如果此属性不配置，则默认使用 `ruax.beforeRequest`
 
-  - `beforeResponse`：请求响应函数，如果此属性不配置，则默认使用 `ruax.beforeResponse`
+  - `beforeResponse`：响应拦截函数，如果此属性不配置，则默认使用 `ruax.beforeResponse`
 
 - 示例
 
@@ -63,7 +63,7 @@ title: 请求方法
 - 类型
 
   ```ts
-  post(url: string, body: BodyInit): Promise<any>
+  post(url: string, body?: BodyInit): Promise<any>
   ```
 
 - 详细信息

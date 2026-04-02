@@ -270,7 +270,7 @@ class Ruax {
           // 计算进度
           const progress = (receivedLength / contentLength) * 100
           // 调用进度回调函数
-          onProgress?.apply(this, [progress])
+          onProgress?.(progress)
           controller.enqueue(value)
         }
       }

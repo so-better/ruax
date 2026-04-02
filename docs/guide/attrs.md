@@ -122,14 +122,14 @@ ruax.beforeRequest = options => {
 ```ts
 const ruax = new Ruax()
 //配置全局的响应拦截
-ruax.beforeResponse = data => {
+ruax.beforeResponse = (response, options, data) => {
   return data.data || []
 }
 ```
 
 ## cancelRequest <Badge type="danger" text="(abortFun: typeof AbortController.prototype.abort) => void" />
 
-取消函数，该函数返回一个方法，执行该方法后会取消当前请求的执行
+取消函数，该函数接收一个取消方法作为参数，执行该参数方法后会取消当前请求的执行
 
 ```ts
 const ruax = new Ruax()
