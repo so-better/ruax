@@ -18,22 +18,22 @@
 ```bash
 # npm
 npm install ruax
-npm install ruax@1.8.17   # 安装指定版本
+npm install ruax@1.8.18   # 安装指定版本
 
 # yarn
 yarn add ruax
-yarn add ruax@1.8.17
+yarn add ruax@1.8.18
 
 # pnpm
 pnpm add ruax
-pnpm add ruax@1.8.17
+pnpm add ruax@1.8.18
 ```
 
 **CDN 使用：**
 
 ```html
 <!-- 引入固定版本 -->
-<script src="https://unpkg.com/ruax@1.8.17/lib/ruax.umd.js"></script>
+<script src="https://unpkg.com/ruax@1.8.18/lib/ruax.umd.js"></script>
 <!-- 始终引入最新版本 -->
 <script src="https://unpkg.com/ruax/lib/ruax.umd.js"></script>
 ```
@@ -151,6 +151,30 @@ patch(url: string, body?: BodyInit): Promise<any>
 ```ts
 delete(url: string): Promise<any>
 ```
+
+## 错误类型
+
+### `FetchTimeoutError`
+
+请求超时时抛出，继承自 `Error`，`name` 为 `'FetchTimeoutError'`。
+
+```ts
+import { Ruax, FetchTimeoutError, FetchCancelError } from 'ruax'
+
+try {
+  await ruax.get('/api/data')
+} catch (err) {
+  if (err instanceof FetchTimeoutError) {
+    console.log('请求超时')
+  } else if (err instanceof FetchCancelError) {
+    console.log('请求已取消')
+  }
+}
+```
+
+### `FetchCancelError`
+
+请求被主动取消时抛出，继承自 `Error`，`name` 为 `'FetchCancelError'`。
 
 ## 文档
 

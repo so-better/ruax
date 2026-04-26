@@ -4,6 +4,50 @@ title: 请求方法
 
 # 请求方法
 
+## FetchTimeoutError
+
+请求超时时抛出的错误类，继承自 `Error`，`name` 属性为 `'FetchTimeoutError'`
+
+```ts
+class FetchTimeoutError extends Error {
+  constructor(timeout: number)
+}
+```
+
+可通过 `instanceof` 判断是否为超时错误：
+
+```ts
+try {
+  await ruax.get('/api/data')
+} catch (err) {
+  if (err instanceof FetchTimeoutError) {
+    console.log('请求超时')
+  }
+}
+```
+
+## FetchCancelError
+
+请求被主动取消时抛出的错误类，继承自 `Error`，`name` 属性为 `'FetchCancelError'`
+
+```ts
+class FetchCancelError extends Error {
+  constructor()
+}
+```
+
+可通过 `instanceof` 判断是否为取消错误：
+
+```ts
+try {
+  await ruax.get('/api/data')
+} catch (err) {
+  if (err instanceof FetchCancelError) {
+    console.log('请求已取消')
+  }
+}
+```
+
 ## create()
 
 该方法用于发起一个请求

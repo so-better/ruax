@@ -1,4 +1,16 @@
 /**
+ * 请求超时错误
+ */
+export declare class FetchTimeoutError extends Error {
+    constructor(timeout: number);
+}
+/**
+ * 请求取消错误
+ */
+export declare class FetchCancelError extends Error {
+    constructor();
+}
+/**
  * 请求返回类型
  */
 export type RuaxResponseType = 'json' | 'text' | 'blob' | 'arrayBuffer' | 'formData' | 'stream';

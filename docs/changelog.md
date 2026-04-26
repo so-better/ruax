@@ -5,6 +5,11 @@ title: 更新日志
 
 # 更新日志
 
+## v1.8.18 <Badge type="tip" text='2026.04.26' />
+
+- 新增 `FetchTimeoutError` 错误类，请求超时时抛出此类型错误，可通过 `instanceof` 精准捕获超时异常
+- 新增 `FetchCancelError` 错误类，请求被主动取消时抛出此类型错误，可通过 `instanceof` 精准捕获取消异常
+
 ## v1.8.17 <Badge type="tip" text='2026.04.26' />
 
 - `responseType` 新增 `stream` 类型，`create()` 直接返回原生 `ReadableStream`，body 不提前消费，支持 SSE 等流式响应场景

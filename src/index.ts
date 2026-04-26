@@ -1,5 +1,25 @@
 import { common as DapCommon } from 'dap-util'
 /**
+ * 请求超时错误
+ */
+export class FetchTimeoutError extends Error {
+  constructor(timeout: number) {
+    super(`The fetch request failed because time exceeded ${timeout}ms`)
+    this.name = 'FetchTimeoutError'
+  }
+}
+
+/**
+ * 请求取消错误
+ */
+export class FetchCancelError extends Error {
+  constructor() {
+    super('The fetch request was actively canceled')
+    this.name = 'FetchCancelError'
+  }
+}
+
+/**
  * 请求返回类型
  */
 export type RuaxResponseType = 'json' | 'text' | 'blob' | 'arrayBuffer' | 'formData' | 'stream'
@@ -274,9 +294,9 @@ class Ruax {
   private async fetchWrapper(options: RuaxFetchWithTimeoutOptionsType) {
     const { timeout = this.timeout, cancelRequest, init, input } = options
     //超时异常
-    const fetchTimeoutError = new Error(`The fetch request failed because time exceeded ${timeout}ms`)
+    const fetchTimeoutError = new FetchTimeoutError(timeout)
     //取消异常
-    const fetchCancelError = new Error(`The fetch request was actively canceled`)
+    const fetchCancelError = new FetchCancelError()
     //创建取消请求的控制器
     const controller = new AbortController()
     //设置超时取消请求（timeout 为 0 时不启用超时）
