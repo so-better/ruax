@@ -2,7 +2,7 @@ import { common as DapCommon } from 'dap-util'
 /**
  * 请求返回类型
  */
-export type RuaxResponseType = 'json' | 'text' | 'blob' | 'arrayBuffer' | 'formData'
+export type RuaxResponseType = 'json' | 'text' | 'blob' | 'arrayBuffer' | 'formData' | 'stream'
 
 /**
  * fetch入参
@@ -43,7 +43,7 @@ export interface RuaxCreateOptions {
    */
   responseType?: RuaxResponseType
   /**
-   * 超时时间，单位ms
+   * 超时时间，单位ms，流式请求建议设为0（不超时）
    */
   timeout?: number
   /**
@@ -55,6 +55,10 @@ export interface RuaxCreateOptions {
    */
   cache?: RequestCache
   /**
+   * 凭证策略，跨域携带 cookie 时设为 'include'
+   */
+  credentials?: RequestCredentials
+  /**
    * 取消请求
    */
   cancelRequest?: (abortFun: typeof AbortController.prototype.abort) => void
@@ -62,6 +66,11 @@ export interface RuaxCreateOptions {
    * 请求进度
    */
   onProgress?: (value: number) => void
+  /**
+   * 流式数据回调，每次收到数据块时触发，done 为 true 表示流结束
+   * 仅在 responseType 为 'stream' 时生效
+   */
+  onChunk?: (chunk: string, done: boolean) => void
 }
 
 /**
@@ -111,6 +120,10 @@ class Ruax {
    */
   cache: RequestCache = 'default'
   /**
+   * 凭证策略
+   */
+  credentials: RequestCredentials = 'same-origin'
+  /**
    * 请求拦截
    */
   beforeRequest?: (options: RuaxCreateOptions) => RuaxCreateOptions
@@ -126,6 +139,10 @@ class Ruax {
    * 请求进度
    */
   onProgress?: (value: number) => void
+  /**
+   * 流式数据回调
+   */
+  onChunk?: (chunk: string, done: boolean) => void
 
   /**
    * 创建请求
@@ -139,17 +156,18 @@ class Ruax {
     let newOptions = this.deleteProperty<RuaxCreateOptions>(options, ['beforeRequest', 'beforeResponse'])
     if (beforeRequest) newOptions = beforeRequest.apply(this, [newOptions])
     //获取参数配置
-    const { baseUrl = this.baseUrl, url, method = this.method, headers, responseType = this.responseType, body, timeout = this.timeout, mode = this.mode, cache = this.cache, cancelRequest = this.cancelRequest, onProgress = this.onProgress } = newOptions
+    const { baseUrl = this.baseUrl, url, method = this.method, headers, responseType = this.responseType, body, timeout = this.timeout, mode = this.mode, cache = this.cache, credentials = this.credentials, cancelRequest = this.cancelRequest, onProgress = this.onProgress, onChunk = this.onChunk } = newOptions
     //发送请求
     let response = await this.fetchWrapper({
       timeout,
       cancelRequest,
       input: `${baseUrl}${url}`,
       init: {
-        method: method.toLocaleUpperCase(),
+        method: method.toUpperCase(),
         headers: { ...this.headers, ...headers },
         mode,
         cache,
+        credentials,
         body
       }
     })
@@ -163,6 +181,20 @@ class Ruax {
     //处理进度
     if (onProgress) {
       response = this.readProgress(response, onProgress)
+    }
+    //流式数据
+    if (responseType == 'stream') {
+      if (!response.body) {
+        throw new Error('The response body is null, streaming is not supported.')
+      }
+      //有 onChunk 回调时，内部消费流并逐块回调
+      if (onChunk) {
+        await this.readStream(response.body, onChunk)
+        return beforeResponse ? beforeResponse.apply(this, [response, newOptions, undefined]) : undefined
+      }
+      //无回调时直接返回 ReadableStream，由调用方自行处理
+      const data = response.body
+      return beforeResponse ? beforeResponse.apply(this, [response, newOptions, data]) : data
     }
     //json数据
     if (responseType == 'json') {
@@ -213,6 +245,38 @@ class Ruax {
   }
 
   /**
+   * 发送PUT请求
+   */
+  async put(url: string, body?: BodyInit) {
+    return this.create({
+      method: 'PUT',
+      url,
+      body
+    })
+  }
+
+  /**
+   * 发送PATCH请求
+   */
+  async patch(url: string, body?: BodyInit) {
+    return this.create({
+      method: 'PATCH',
+      url,
+      body
+    })
+  }
+
+  /**
+   * 发送DELETE请求
+   */
+  async delete(url: string) {
+    return this.create({
+      method: 'DELETE',
+      url
+    })
+  }
+
+  /**
    * 删除对象的某个属性
    */
   private deleteProperty<T>(data: any, keys: string[]) {
@@ -234,10 +298,13 @@ class Ruax {
     const fetchCancelError = new Error(`The fetch request was actively canceled`)
     //创建取消请求的控制器
     const controller = new AbortController()
-    //设置超时取消请求
-    const timeoutId = setTimeout(() => {
-      controller.abort(fetchTimeoutError)
-    }, timeout)
+    //设置超时取消请求（timeout 为 0 时不启用超时）
+    const timeoutId =
+      timeout > 0
+        ? setTimeout(() => {
+            controller.abort(fetchTimeoutError)
+          }, timeout)
+        : undefined
     //如果设置了取消请求的函数在此刻执行
     if (cancelRequest) cancelRequest.apply(this, [controller.abort.bind(controller, fetchCancelError)])
     //返回fetch方法
@@ -275,7 +342,28 @@ class Ruax {
         }
       }
     })
-    return new Response(stream)
+    return new Response(stream, { status: response.status, statusText: response.statusText, headers: response.headers })
+  }
+
+  /**
+   * 消费 ReadableStream，将每个数据块解码为文本后通过 onChunk 回调
+   * 请求被 abort 或发生错误时异常会向上抛出，onChunk 不会触发 done，调用方需在 catch 中处理清理逻辑
+   */
+  private async readStream(body: ReadableStream<Uint8Array>, onChunk: (chunk: string, done: boolean) => void) {
+    const reader = body.getReader()
+    const decoder = new TextDecoder()
+    try {
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) {
+          onChunk('', true)
+          break
+        }
+        onChunk(decoder.decode(value, { stream: true }), false)
+      }
+    } finally {
+      reader.releaseLock()
+    }
   }
 }
 

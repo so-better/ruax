@@ -1,7 +1,7 @@
 /**
  * 请求返回类型
  */
-export type RuaxResponseType = 'json' | 'text' | 'blob' | 'arrayBuffer' | 'formData';
+export type RuaxResponseType = 'json' | 'text' | 'blob' | 'arrayBuffer' | 'formData' | 'stream';
 /**
  * fetch入参
  */
@@ -40,7 +40,7 @@ export interface RuaxCreateOptions {
      */
     responseType?: RuaxResponseType;
     /**
-     * 超时时间，单位ms
+     * 超时时间，单位ms，流式请求建议设为0（不超时）
      */
     timeout?: number;
     /**
@@ -52,6 +52,10 @@ export interface RuaxCreateOptions {
      */
     cache?: RequestCache;
     /**
+     * 凭证策略，跨域携带 cookie 时设为 'include'
+     */
+    credentials?: RequestCredentials;
+    /**
      * 取消请求
      */
     cancelRequest?: (abortFun: typeof AbortController.prototype.abort) => void;
@@ -59,6 +63,11 @@ export interface RuaxCreateOptions {
      * 请求进度
      */
     onProgress?: (value: number) => void;
+    /**
+     * 流式数据回调，每次收到数据块时触发，done 为 true 表示流结束
+     * 仅在 responseType 为 'stream' 时生效
+     */
+    onChunk?: (chunk: string, done: boolean) => void;
 }
 /**
  * 创建请求入参类型
@@ -106,6 +115,10 @@ declare class Ruax {
      */
     cache: RequestCache;
     /**
+     * 凭证策略
+     */
+    credentials: RequestCredentials;
+    /**
      * 请求拦截
      */
     beforeRequest?: (options: RuaxCreateOptions) => RuaxCreateOptions;
@@ -122,6 +135,10 @@ declare class Ruax {
      */
     onProgress?: (value: number) => void;
     /**
+     * 流式数据回调
+     */
+    onChunk?: (chunk: string, done: boolean) => void;
+    /**
      * 创建请求
      */
     create(options: RuaxCreateOptionsWithInterceptor): Promise<any>;
@@ -134,6 +151,18 @@ declare class Ruax {
      */
     get(url: string): Promise<any>;
     /**
+     * 发送PUT请求
+     */
+    put(url: string, body?: BodyInit): Promise<any>;
+    /**
+     * 发送PATCH请求
+     */
+    patch(url: string, body?: BodyInit): Promise<any>;
+    /**
+     * 发送DELETE请求
+     */
+    delete(url: string): Promise<any>;
+    /**
      * 删除对象的某个属性
      */
     private deleteProperty;
@@ -145,5 +174,10 @@ declare class Ruax {
      * 读取进度
      */
     private readProgress;
+    /**
+     * 消费 ReadableStream，将每个数据块解码为文本后通过 onChunk 回调
+     * 请求被 abort 或发生错误时异常会向上抛出，onChunk 不会触发 done，调用方需在 catch 中处理清理逻辑
+     */
+    private readStream;
 }
 export { Ruax, Ruax as default };

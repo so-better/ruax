@@ -36,9 +36,13 @@ title: 请求方法
 
   - `cache`：指定请求的缓存行为，如果此属性不配置则默认使用 `ruax.cache`
 
+  - `credentials`：凭证策略，如果此属性不配置则默认使用 `ruax.credentials`
+
   - `cancelRequest`：取消函数，如果此属性不配置则默认使用 `ruax.cancelRequest`
 
   - `onProgress`：请求进度监听函数，如果此属性不配置则默认使用 `ruax.onProgress`
+
+  - `onChunk`：流式数据回调，仅在 `responseType` 为 `stream` 时生效，如果此属性不配置则默认使用 `ruax.onChunk`
 
   - `beforeRequest`：请求拦截函数，如果此属性不配置，则默认使用 `ruax.beforeRequest`
 
@@ -105,4 +109,73 @@ title: 请求方法
   ```ts
   const ruax = new Ruax()
   const data = await ruax.get('/api/get')
+  ```
+
+## put()
+
+快速发起一个 `PUT` 请求
+
+- 类型
+
+  ```ts
+  put(url: string, body?: BodyInit): Promise<any>
+  ```
+
+- 详细信息
+
+  第一个入参表示请求的地址，同 `create` 方法的 `url` 参数；第二个参数表示请求入参数据，同 `create` 的 `body` 参数
+
+- 示例
+
+  ```ts
+  const ruax = new Ruax()
+  const data = await ruax.put(
+    '/api/put',
+    JSON.stringify({ id: '1' })
+  )
+  ```
+
+## patch()
+
+快速发起一个 `PATCH` 请求
+
+- 类型
+
+  ```ts
+  patch(url: string, body?: BodyInit): Promise<any>
+  ```
+
+- 详细信息
+
+  第一个入参表示请求的地址，同 `create` 方法的 `url` 参数；第二个参数表示请求入参数据，同 `create` 的 `body` 参数
+
+- 示例
+
+  ```ts
+  const ruax = new Ruax()
+  const data = await ruax.patch(
+    '/api/patch',
+    JSON.stringify({ id: '1', name: '张三' })
+  )
+  ```
+
+## delete()
+
+快速发起一个 `DELETE` 请求
+
+- 类型
+
+  ```ts
+  delete(url: string): Promise<any>
+  ```
+
+- 详细信息
+
+  提供一个入参，表示请求的地址，同 `create` 方法的 `url` 参数
+
+- 示例
+
+  ```ts
+  const ruax = new Ruax()
+  const data = await ruax.delete('/api/delete')
   ```

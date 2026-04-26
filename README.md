@@ -12,28 +12,29 @@
 - 增加请求拦截和响应拦截，方便全局处理
 - 增加响应类型参数，针对不同响应类型对结果进行处理后传递
 - 增加基础路径配置，可针对每次请求使用公共的基础路径
+- 支持流式数据响应，可通过回调逐块接收数据，适用于 SSE、AI 流式输出等场景
 
 ## 安装
 
 ```bash
 # npm
 npm install ruax
-npm install ruax@1.8.14   # 安装指定版本
+npm install ruax@1.8.15   # 安装指定版本
 
 # yarn
 yarn add ruax
-yarn add ruax@1.8.14
+yarn add ruax@1.8.15
 
 # pnpm
 pnpm add ruax
-pnpm add ruax@1.8.14
+pnpm add ruax@1.8.15
 ```
 
 **CDN 使用：**
 
 ```html
 <!-- 引入固定版本 -->
-<script src="https://unpkg.com/ruax@1.8.14/lib/ruax.umd.js"></script>
+<script src="https://unpkg.com/ruax@1.8.15/lib/ruax.umd.js"></script>
 <!-- 始终引入最新版本 -->
 <script src="https://unpkg.com/ruax/lib/ruax.umd.js"></script>
 ```
@@ -79,14 +80,16 @@ const Ruax = window.Ruax.default
 | `baseUrl` | `string` | `''` | 请求基础地址 |
 | `method` | `string` | `'GET'` | 请求方法 |
 | `headers` | `HeadersInit` | `{}` | 请求头 |
-| `responseType` | `RuaxResponseType` | `'json'` | 响应类型，支持 `json` `text` `blob` `arrayBuffer` `formData` |
-| `timeout` | `number` | `3000` | 超时时间（ms） |
+| `responseType` | `RuaxResponseType` | `'json'` | 响应类型，支持 `json` `text` `blob` `arrayBuffer` `formData` `stream` |
+| `timeout` | `number` | `3000` | 超时时间（ms），设为 `0` 不启用超时 |
 | `mode` | `RequestMode` | `'cors'` | 跨域行为 |
 | `cache` | `RequestCache` | `'default'` | 缓存策略 |
+| `credentials` | `RequestCredentials` | `'same-origin'` | 凭证策略，跨域携带 cookie 时设为 `include` |
 | `beforeRequest` | `(options: RuaxCreateOptions) => RuaxCreateOptions` | - | 请求拦截函数 |
 | `beforeResponse` | `(response: Response, options: RuaxCreateOptions, data?: any) => Promise<any> \| any` | - | 响应拦截函数 |
 | `cancelRequest` | `(abortFun: typeof AbortController.prototype.abort) => void` | - | 取消请求函数 |
-| `onProgress` | `(value: number) => void` | - | 进度监听函数（0-100） |
+| `onProgress` | `(value: number) => void` | - | 进度监听函数（0-100），`responseType` 为 `stream` 时同样生效 |
+| `onChunk` | `(chunk: string, done: boolean) => void` | - | 流式数据回调，仅 `responseType` 为 `stream` 时生效 |
 
 ```ts
 const ruax = new Ruax()
@@ -125,6 +128,30 @@ post(url: string, body?: BodyInit): Promise<any>
 
 ```ts
 get(url: string): Promise<any>
+```
+
+### `put(url, body?)`
+
+快速发起一个 PUT 请求。
+
+```ts
+put(url: string, body?: BodyInit): Promise<any>
+```
+
+### `patch(url, body?)`
+
+快速发起一个 PATCH 请求。
+
+```ts
+patch(url: string, body?: BodyInit): Promise<any>
+```
+
+### `delete(url)`
+
+快速发起一个 DELETE 请求。
+
+```ts
+delete(url: string): Promise<any>
 ```
 
 ## 文档
