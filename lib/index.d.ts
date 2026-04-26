@@ -1,7 +1,7 @@
 /**
  * 请求返回类型
  */
-export type RuaxResponseType = 'json' | 'text' | 'blob' | 'arrayBuffer' | 'formData';
+export type RuaxResponseType = 'json' | 'text' | 'blob' | 'arrayBuffer' | 'formData' | 'stream';
 /**
  * fetch入参
  */

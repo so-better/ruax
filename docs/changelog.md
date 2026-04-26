@@ -5,6 +5,10 @@ title: 更新日志
 
 # 更新日志
 
+## v1.8.17 <Badge type="tip" text='2026.04.26' />
+
+- `responseType` 新增 `stream` 类型，`create()` 直接返回原生 `ReadableStream`，body 不提前消费，支持 SSE 等流式响应场景
+
 ## v1.8.16 <Badge type="tip" text='2026.04.26' />
 
 - 移除流式请求支持，`responseType` 不再支持 `stream` 类型，同步移除 `onChunk` 配置项

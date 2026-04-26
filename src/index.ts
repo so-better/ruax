@@ -2,7 +2,7 @@ import { common as DapCommon } from 'dap-util'
 /**
  * 请求返回类型
  */
-export type RuaxResponseType = 'json' | 'text' | 'blob' | 'arrayBuffer' | 'formData'
+export type RuaxResponseType = 'json' | 'text' | 'blob' | 'arrayBuffer' | 'formData' | 'stream'
 
 /**
  * fetch入参
@@ -196,6 +196,11 @@ class Ruax {
     if (responseType == 'arrayBuffer') {
       const data = await response.arrayBuffer()
       return beforeResponse ? beforeResponse.apply(this, [response, newOptions, data]) : data
+    }
+    //stream流式数据（body 不提前消费，返回 ReadableStream）
+    if (responseType == 'stream') {
+      const stream = response.body
+      return beforeResponse ? beforeResponse.apply(this, [response, newOptions, stream]) : stream
     }
   }
 

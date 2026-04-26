@@ -42,7 +42,7 @@ ruax.headers = {
 
 期待的请求返回类型，请求响应后会根据该值对返回结果进行处理，最终将转换后的结果返回
 
-可取值是 `json` `text` `blob` `arrayBuffer` `formData`
+可取值是 `json` `text` `blob` `arrayBuffer` `formData` `stream`
 
 ```ts
 const ruax = new Ruax()

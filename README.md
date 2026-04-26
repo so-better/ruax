@@ -18,22 +18,22 @@
 ```bash
 # npm
 npm install ruax
-npm install ruax@1.8.16   # 安装指定版本
+npm install ruax@1.8.17   # 安装指定版本
 
 # yarn
 yarn add ruax
-yarn add ruax@1.8.16
+yarn add ruax@1.8.17
 
 # pnpm
 pnpm add ruax
-pnpm add ruax@1.8.16
+pnpm add ruax@1.8.17
 ```
 
 **CDN 使用：**
 
 ```html
 <!-- 引入固定版本 -->
-<script src="https://unpkg.com/ruax@1.8.16/lib/ruax.umd.js"></script>
+<script src="https://unpkg.com/ruax@1.8.17/lib/ruax.umd.js"></script>
 <!-- 始终引入最新版本 -->
 <script src="https://unpkg.com/ruax/lib/ruax.umd.js"></script>
 ```
@@ -79,7 +79,7 @@ const Ruax = window.Ruax.default
 | `baseUrl` | `string` | `''` | 请求基础地址 |
 | `method` | `string` | `'GET'` | 请求方法 |
 | `headers` | `HeadersInit` | `{}` | 请求头 |
-| `responseType` | `RuaxResponseType` | `'json'` | 响应类型，支持 `json` `text` `blob` `arrayBuffer` `formData` |
+| `responseType` | `RuaxResponseType` | `'json'` | 响应类型，支持 `json` `text` `blob` `arrayBuffer` `formData` `stream` |
 | `timeout` | `number` | `3000` | 超时时间（ms），设为 `0` 不启用超时 |
 | `mode` | `RequestMode` | `'cors'` | 跨域行为 |
 | `cache` | `RequestCache` | `'default'` | 缓存策略 |
