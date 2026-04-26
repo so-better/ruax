@@ -42,7 +42,7 @@ ruax.headers = {
 
 期待的请求返回类型，请求响应后会根据该值对返回结果进行处理，最终将转换后的结果返回
 
-可取值是 `json` `text` `blob` `arrayBuffer` `formData` `stream`
+可取值是 `json` `text` `blob` `arrayBuffer` `formData`
 
 ```ts
 const ruax = new Ruax()
@@ -116,25 +116,6 @@ ruax.cache = 'reload'
 const ruax = new Ruax()
 //跨域请求需要携带 cookie 时配置
 ruax.credentials = 'include'
-```
-
-## onChunk <Badge type="danger" text="(chunk: string, done: boolean) => void" />
-
-流式数据回调函数，仅在 `responseType` 为 `stream` 时生效
-
-每次收到数据块时触发，`chunk` 为当前解码后的文本片段，`done` 为 `true` 表示流已正常结束
-
-> 请求被取消或发生错误时，`done` 不会触发，需在 `catch` 中处理清理逻辑
-
-```ts
-const ruax = new Ruax()
-ruax.onChunk = (chunk, done) => {
-  if (done) {
-    console.log('流结束')
-    return
-  }
-  console.log(chunk) //输出当前收到的数据块
-}
 ```
 
 ## beforeRequest <Badge type="danger" text="(options: RuaxCreateOptions) => RuaxCreateOptions" />

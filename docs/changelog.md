@@ -5,6 +5,10 @@ title: 更新日志
 
 # 更新日志
 
+## v1.8.16 <Badge type="tip" text='2026.04.26' />
+
+- 移除流式请求支持，`responseType` 不再支持 `stream` 类型，同步移除 `onChunk` 配置项
+
 ## v1.8.15 <Badge type="tip" text='2026.04.26' />
 
 - 新增流式请求支持，`responseType` 新增 `stream` 类型，可通过 `onChunk` 回调逐块接收数据，或直接获取 `ReadableStream`

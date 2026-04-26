@@ -42,8 +42,6 @@ title: 请求方法
 
   - `onProgress`：请求进度监听函数，如果此属性不配置则默认使用 `ruax.onProgress`
 
-  - `onChunk`：流式数据回调，仅在 `responseType` 为 `stream` 时生效，如果此属性不配置则默认使用 `ruax.onChunk`
-
   - `beforeRequest`：请求拦截函数，如果此属性不配置，则默认使用 `ruax.beforeRequest`
 
   - `beforeResponse`：响应拦截函数，如果此属性不配置，则默认使用 `ruax.beforeResponse`

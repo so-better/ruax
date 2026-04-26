@@ -2,7 +2,7 @@ import { common as DapCommon } from 'dap-util'
 /**
  * 请求返回类型
  */
-export type RuaxResponseType = 'json' | 'text' | 'blob' | 'arrayBuffer' | 'formData' | 'stream'
+export type RuaxResponseType = 'json' | 'text' | 'blob' | 'arrayBuffer' | 'formData'
 
 /**
  * fetch入参
@@ -43,7 +43,7 @@ export interface RuaxCreateOptions {
    */
   responseType?: RuaxResponseType
   /**
-   * 超时时间，单位ms，流式请求建议设为0（不超时）
+   * 超时时间，单位ms
    */
   timeout?: number
   /**
@@ -66,11 +66,6 @@ export interface RuaxCreateOptions {
    * 请求进度
    */
   onProgress?: (value: number) => void
-  /**
-   * 流式数据回调，每次收到数据块时触发，done 为 true 表示流结束
-   * 仅在 responseType 为 'stream' 时生效
-   */
-  onChunk?: (chunk: string, done: boolean) => void
 }
 
 /**
@@ -140,11 +135,6 @@ class Ruax {
    */
   onProgress?: (value: number) => void
   /**
-   * 流式数据回调
-   */
-  onChunk?: (chunk: string, done: boolean) => void
-
-  /**
    * 创建请求
    */
   async create(options: RuaxCreateOptionsWithInterceptor) {
@@ -156,7 +146,7 @@ class Ruax {
     let newOptions = this.deleteProperty<RuaxCreateOptions>(options, ['beforeRequest', 'beforeResponse'])
     if (beforeRequest) newOptions = beforeRequest.apply(this, [newOptions])
     //获取参数配置
-    const { baseUrl = this.baseUrl, url, method = this.method, headers, responseType = this.responseType, body, timeout = this.timeout, mode = this.mode, cache = this.cache, credentials = this.credentials, cancelRequest = this.cancelRequest, onProgress = this.onProgress, onChunk = this.onChunk } = newOptions
+    const { baseUrl = this.baseUrl, url, method = this.method, headers, responseType = this.responseType, body, timeout = this.timeout, mode = this.mode, cache = this.cache, credentials = this.credentials, cancelRequest = this.cancelRequest, onProgress = this.onProgress } = newOptions
     //发送请求
     let response = await this.fetchWrapper({
       timeout,
@@ -181,20 +171,6 @@ class Ruax {
     //处理进度
     if (onProgress) {
       response = this.readProgress(response, onProgress)
-    }
-    //流式数据
-    if (responseType == 'stream') {
-      if (!response.body) {
-        throw new Error('The response body is null, streaming is not supported.')
-      }
-      //有 onChunk 回调时，内部消费流并逐块回调
-      if (onChunk) {
-        await this.readStream(response.body, onChunk)
-        return beforeResponse ? beforeResponse.apply(this, [response, newOptions, undefined]) : undefined
-      }
-      //无回调时直接返回 ReadableStream，由调用方自行处理
-      const data = response.body
-      return beforeResponse ? beforeResponse.apply(this, [response, newOptions, data]) : data
     }
     //json数据
     if (responseType == 'json') {
@@ -290,7 +266,7 @@ class Ruax {
   /**
    * 包括超时设置功能的fetch函数
    */
-  private fetchWrapper(options: RuaxFetchWithTimeoutOptionsType) {
+  private async fetchWrapper(options: RuaxFetchWithTimeoutOptionsType) {
     const { timeout = this.timeout, cancelRequest, init, input } = options
     //超时异常
     const fetchTimeoutError = new Error(`The fetch request failed because time exceeded ${timeout}ms`)
@@ -343,27 +319,6 @@ class Ruax {
       }
     })
     return new Response(stream, { status: response.status, statusText: response.statusText, headers: response.headers })
-  }
-
-  /**
-   * 消费 ReadableStream，将每个数据块解码为文本后通过 onChunk 回调
-   * 请求被 abort 或发生错误时异常会向上抛出，onChunk 不会触发 done，调用方需在 catch 中处理清理逻辑
-   */
-  private async readStream(body: ReadableStream<Uint8Array>, onChunk: (chunk: string, done: boolean) => void) {
-    const reader = body.getReader()
-    const decoder = new TextDecoder()
-    try {
-      while (true) {
-        const { done, value } = await reader.read()
-        if (done) {
-          onChunk('', true)
-          break
-        }
-        onChunk(decoder.decode(value, { stream: true }), false)
-      }
-    } finally {
-      reader.releaseLock()
-    }
   }
 }
 
